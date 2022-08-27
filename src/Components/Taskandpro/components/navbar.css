@@ -1,0 +1,44 @@
+.nav-container {
+  width: 95%;
+}
+.logo-text-container {
+  flex-wrap: nowrap;
+  display: flex;
+  align-items: center;
+}
+.logo-text {
+  color: #fff;
+  display: block;
+  margin-right: 7px;
+  max-width: 240px;
+  overflow: hidden;
+  position: relative;
+  flex-grow: 1;
+  flex-shrink: 1;
+  font-size: x-large;
+}
+.logo-color {
+  flex-grow: 1;
+  flex-shrink: 1;
+  font-size: x-large;
+  flex-basis: 0;
+  color: #2fc6f7;
+}
+
+.time-box {
+  display: inline-block;
+  height: 63px;
+  font-size: 38px;
+  font-family: var(--ui-font-family-secondary, var(--ui-font-family-open-sans));
+  font-weight: var(--ui-font-weight-light, 300);
+
+  line-height: 59px;
+  position: relative;
+  vertical-align: middle;
+  z-index: 5;
+  color: #fff;
+}
+
+.time-box > p {
+  vertical-align: top;
+}
