@@ -4,7 +4,7 @@ import { Navigate } from "react-router-dom";
 
 export const RequiredAuth = ({ children }) => {
   const {
-    state: { isSignuped, isLoggedIn },
+    state: { isSignedUp, isLoggedIn },
   } = useContext(AuthContext);
 
   let setLoggedIn = localStorage.getItem("setLoggedIn");

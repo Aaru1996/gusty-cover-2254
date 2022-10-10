@@ -25,9 +25,11 @@ app.use(helmet());
 app.use(cors());
 app.use(xss());
 
-app.get("/", (req, res) => {
-  res.send("Users API");
-});
+// app.get("/", (req, res) => {
+//   res.send("Users API");
+// });
+
+// console.log("")
 
 app.use("/auth", authRouter);
 app.use("/usertasks", authenticateUser, jobsRouter);

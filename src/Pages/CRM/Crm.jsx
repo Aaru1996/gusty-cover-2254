@@ -40,7 +40,7 @@ export const Crm = () => {
               setOpenform(!openform);
             });
         });
-        // axios.post(`http://localhost:8080/tasks/${tasks[i].id}`,obj)
+        // axios.post(`https://bitrix-clone.herokuapp.com/tasks/${tasks[i].id}`,obj)
         console.log("obj", obj);
       }
     }
