@@ -3,34 +3,61 @@ import {
   Box,
   Button,
   Flex,
+  FormControl,
+  FormLabel,
   Heading,
   HStack,
   Image,
   Input,
+  Select,
   Text,
   useMenuState,
+  useToast,
 } from "@chakra-ui/react";
 import { AuthContext } from "../../Context/AuthContext";
 import { Link, Navigate, NavLink } from "react-router-dom";
 import axios from "axios";
+import { setToast } from "../../utils/Toast";
+
+const successToast = (toast, message) => {
+  setToast({
+    toast,
+    title: "Success",
+    status: "success",
+    description: message,
+  });
+};
+
+const errorToast = (toast, message) => {
+  setToast({
+    toast,
+    title: "Error",
+    status: "warning",
+    description: message,
+  });
+};
 
 export default function LoginPage() {
   const [loginData, setLoginData] = useState({});
   const { state, dispatch } = useContext(AuthContext);
+  const toast = useToast();
 
-  const loginUser = async () => {
+  const loginUser = async (e) => {
+    e.preventDefault();
+    console.log("Hi");
     try {
-      await axios
-        .post("https://bitrix-clone.herokuapp.com/auth/login", loginData)
-        .then((data) => {
-          // console.log(data);
-          localStorage.setItem("token", data.data.token);
-          localStorage.setItem("name", data.data.user.name);
-          localStorage.setItem("email", data.data.user.email);
-          dispatch({ type: "loginSuccess", payload: data.data });
-        });
+      const { data } = await axios.post(
+        "http://localhost:8080/auth/login",
+        loginData
+      );
+
+      successToast(toast, "Login Success");
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("name", data.user.name);
+      localStorage.setItem("email", data.user.email);
+      dispatch({ type: "loginSuccess", payload: data });
     } catch (err) {
-      alert(err);
+      errorToast(toast, err.response.data.msg);
     }
   };
 
@@ -42,6 +69,7 @@ export default function LoginPage() {
   if (state.isLoggedIn) {
     return <Navigate to="/dashboard" />;
   }
+
   return (
     <HStack w="100%">
       <Box
@@ -90,48 +118,55 @@ export default function LoginPage() {
         >
           Enter phone number or email
         </Text>
-        <Box>
-          <Input
-            type="text"
-            h="50px"
-            border="2px solid grey"
-            w="80%"
-            name="email"
-            onChange={(e) => handleOnChange(e)}
-            placeholder="Enter email"
-          />
-        </Box>
-        <Text
-          textAlign="left"
-          fontWeight="light"
-          fontSize="20px"
-          mt="1%"
-          ml="10%"
-        >
-          Enter your password
-        </Text>
-        <Box>
-          <Input
-            placeholder="Enter your password"
-            type="password"
-            h="50px"
-            border="2px solid grey"
-            w="80%"
-            name="password"
-            onChange={(e) => handleOnChange(e)}
-          />
-        </Box>
-        <Box>
-          <Button
-            color="white"
-            bgColor="#53dffa"
-            size="lg"
-            mt="2%"
-            onClick={() => loginUser()}
-          >
-            Login
-          </Button>
-        </Box>
+        <form action="" onSubmit={loginUser}>
+          <FormControl>
+            <Box>
+              <Input
+                type="text"
+                h="50px"
+                border="2px solid grey"
+                w="80%"
+                name="email"
+                onChange={(e) => handleOnChange(e)}
+                placeholder="Enter email"
+                required
+              />
+            </Box>
+            <Text
+              textAlign="left"
+              fontWeight="light"
+              fontSize="20px"
+              mt="1%"
+              ml="10%"
+            >
+              Enter your password
+            </Text>
+            <Box>
+              <Input
+                placeholder="Enter your password"
+                type="password"
+                h="50px"
+                border="2px solid grey"
+                w="80%"
+                name="password"
+                onChange={(e) => handleOnChange(e)}
+                required
+              />
+            </Box>
+            <Box>
+              <Input
+                color="white"
+                bgColor="#53dffa"
+                size="lg"
+                mt="2%"
+                type="submit"
+                w="80%"
+                required
+              ></Input>
+            </Box>
+          </FormControl>
+        </form>
+
         <Text mt="3%" fontWeight="light" fontSize="20px">
           or
         </Text>
