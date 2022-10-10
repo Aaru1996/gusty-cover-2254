@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../Context/AuthContext";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -11,15 +11,38 @@ import {
   Input,
   Text,
   Spinner,
+  useToast,
 } from "@chakra-ui/react";
+import { setToast, Toast } from "../../utils/Toast";
+import { useEffect } from "react";
 
 // https://bitrix-clone.herokuapp.com
 // https://bitrix-clone.herokuapp.com
+
+const successToast = (toast, message) => {
+  setToast({
+    toast,
+    title: "Success",
+    status: "success",
+    description: message,
+  });
+};
+
+const errorToast = (toast, message) => {
+  setToast({
+    toast,
+    title: "Error",
+    status: "warning",
+    description: message,
+  });
+};
 
 const SignupPage = () => {
   const { state, dispatch } = useContext(AuthContext);
-  const { signupLoading } = state;
-  console.log(signupLoading);
+  const { signupLoading, isSignedUp } = state;
+  const navigate = useNavigate();
+  // console.log(signupLoading, isSignedUp);
+  const toast = useToast();
   const [tasks, setTasks] = useState({});
 
   const handleChange = (e) => {
@@ -38,17 +61,21 @@ const SignupPage = () => {
         .post("https://bitrix-clone.herokuapp.com/auth/register", tasks)
         .then((data) => {
           dispatch({ type: "signupSuccess", payload: data.data });
+          successToast(toast);
         });
     } catch (err) {
-      console.log(err.response.data.msg);
       dispatch({ type: "signupFail" });
-      alert(err.response.data.msg);
+      errorToast(toast, err.response.data.msg);
     }
   };
 
-  if (state.isSignedUp) {
-    return <Navigate to="/login" />;
-  }
+  useEffect(() => {
+    console.log("isSignedUp", isSignedUp);
+    if (isSignedUp) {
+      navigate("/login");
+    }
+  }, [isSignedUp, navigate]);
+
   return (
     <>
       {signupLoading ? (
@@ -62,43 +89,44 @@ const SignupPage = () => {
       ) : (
         <Box boxShadow="lg" w="30%" p="2%" m="auto" rounded="md">
           <Box>
-            <FormControl>
-              <FormLabel>Name</FormLabel>
-              <Input
-                w="100%"
-                type="text"
-                placeholder="name"
-                name="name"
-                onChange={handleChange}
-                required
-              />
-              <FormLabel>Email address</FormLabel>
-              <Input
-                w="100%"
-                type="text"
-                placeholder="email"
-                name="email"
-                onChange={handleChange}
-                required
-              />
-              <FormLabel>Password</FormLabel>
-              <Input
-                w="100%"
-                type="text"
-                placeholder="password"
-                name="password"
-                onChange={handleChange}
-                required
-              />
-              <Input
-                size="lg"
-                bgColor="blue"
-                mt="20px"
-                color="white"
-                type="submit"
-                onClick={handleClick}
-              />
-            </FormControl>
+            <form action="" onSubmit={handleClick}>
+              <FormControl>
+                <FormLabel>Name</FormLabel>
+                <Input
+                  w="100%"
+                  type="text"
+                  placeholder="name"
+                  name="name"
+                  onChange={handleChange}
+                  required
+                />
+                <FormLabel>Email address</FormLabel>
+                <Input
+                  w="100%"
+                  type="text"
+                  placeholder="email"
+                  name="email"
+                  onChange={handleChange}
+                  required
+                />
+                <FormLabel>Password</FormLabel>
+                <Input
+                  w="100%"
+                  type="text"
+                  placeholder="password"
+                  name="password"
+                  onChange={handleChange}
+                  required
+                />
+                <Input
+                  size="lg"
+                  bgColor="blue"
+                  mt="20px"
+                  color="white"
+                  type="submit"
+                />
+              </FormControl>
+            </form>
           </Box>
         </Box>
       )}

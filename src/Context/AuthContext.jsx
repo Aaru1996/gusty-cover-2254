@@ -5,7 +5,7 @@ export const AuthContext = createContext();
 const initialState = {
   token: "",
   isLoggedIn: false,
-  isSignuped: false,
+  isSignedUp: false,
   data: [],
   name: "",
   sortName: true,
@@ -26,7 +26,7 @@ const reducer = (state, { type, payload }) => {
       return {
         ...state,
         signupLoading: true,
-        isSignuped: false,
+        isSignedUp: false,
       };
     }
 
@@ -34,7 +34,7 @@ const reducer = (state, { type, payload }) => {
       return {
         ...state,
         signupLoading: false,
-        isSignuped: true,
+        isSignedUp: true,
       };
     }
 
@@ -42,7 +42,7 @@ const reducer = (state, { type, payload }) => {
       return {
         ...state,
         signupLoading: false,
-        isSignuped: false,
+        isSignedUp: false,
       };
     }
 

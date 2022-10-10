@@ -35,21 +35,25 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
+  console.log("in login", req.body);
   const { email, password } = req.body;
 
   if (!email || !password) {
-    throw new BadRequestError("Please provide email and password");
+    res.status(404).json({ msg: "Please provide email and password" });
+    return;
   }
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw new UnauthenticatedError("Invalid Credentials");
+    res.status(404).json({ msg: "Invalid Credentials" });
+    return;
   }
 
   const isPasswordCorrect = await user.comparePassword(password);
 
   if (!isPasswordCorrect) {
-    throw new UnauthenticatedError("Invalid Credentials");
+    res.status(404).json({ msg: "Invalid Credentials" });
+    return;
   }
 
   const token = user.createJWT();
