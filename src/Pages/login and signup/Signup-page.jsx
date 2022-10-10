@@ -11,15 +11,19 @@ import {
   Input,
   Text,
   Spinner,
+  useToast,
 } from "@chakra-ui/react";
+import { setToast, Toast } from "../../utils/Toast";
+import { useEffect } from "react";
 
 // https://bitrix-clone.herokuapp.com
 // https://bitrix-clone.herokuapp.com
 
 const SignupPage = () => {
   const { state, dispatch } = useContext(AuthContext);
-  const { signupLoading } = state;
-  console.log(signupLoading);
+  const { signupLoading, isSignedUp } = state;
+  console.log(signupLoading, isSignedUp);
+  const toast = useToast();
   const [tasks, setTasks] = useState({});
 
   const handleChange = (e) => {
@@ -38,17 +42,30 @@ const SignupPage = () => {
         .post("https://bitrix-clone.herokuapp.com/auth/register", tasks)
         .then((data) => {
           dispatch({ type: "signupSuccess", payload: data.data });
+          // setToast({
+          //   toast,
+          //   title: "suceess",
+          //   status: "Login SuccessFull",
+          // });
         });
     } catch (err) {
       console.log(err.response.data.msg);
       dispatch({ type: "signupFail" });
-      alert(err.response.data.msg);
+      setToast({
+        toast,
+        title: "Error",
+        status: "warning",
+        description: err.response.data.msg,
+      });
     }
   };
 
-  if (state.isSignedUp) {
-    return <Navigate to="/login" />;
-  }
+  useEffect(() => {
+    if (isSignedUp) {
+      return <Navigate to="/login" />;
+    }
+  }, [isSignedUp]);
+
   return (
     <>
       {signupLoading ? (
