@@ -17,14 +17,32 @@ const initialState = {
   totalCount: 0,
   crm: false,
   tasks: false,
+  signupLoading: false,
 };
 
 const reducer = (state, { type, payload }) => {
   switch (type) {
+    case "signupRequest": {
+      return {
+        ...state,
+        signupLoading: true,
+        isSignuped: false,
+      };
+    }
+
     case "signupSuccess": {
       return {
         ...state,
+        signupLoading: false,
         isSignuped: true,
+      };
+    }
+
+    case "signupFail": {
+      return {
+        ...state,
+        signupLoading: false,
+        isSignuped: false,
       };
     }
 
@@ -33,6 +51,7 @@ const reducer = (state, { type, payload }) => {
       return {
         ...state,
         token: payload.token,
+        signupLoading: false,
         isLoggedIn: true,
         name: payload.user.name,
       };

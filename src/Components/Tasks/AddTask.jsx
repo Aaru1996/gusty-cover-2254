@@ -28,7 +28,7 @@ const AddTask = () => {
     setTaskData({ ...taskData, name: "" });
     try {
       await axios
-        .post("https://sagar-rct-201.herokuapp.com/usertasks", taskData, {
+        .post("https://bitrix-clone.herokuapp.com/usertasks", taskData, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

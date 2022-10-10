@@ -9,7 +9,7 @@ export const getUserData = async (
   try {
     axios
       .get(
-        `https://sagar-rct-201.herokuapp.com/usertasks?page=${currentPage}&limit=${pageLimit}`,
+        `https://bitrix-clone.herokuapp.com/usertasks?page=${currentPage}&limit=${pageLimit}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -30,7 +30,7 @@ export const getUserData = async (
 export const deleteTask = async (el, dispatch, token) => {
   try {
     await axios.delete(
-      `https://sagar-rct-201.herokuapp.com/usertasks/${el._id}`,
+      `https://bitrix-clone.herokuapp.com/usertasks/${el._id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -52,7 +52,7 @@ export const updateTask = async (
 ) => {
   try {
     await axios
-      .patch(`https://sagar-rct-201.herokuapp.com/usertasks/${id}`, change, {
+      .patch(`https://bitrix-clone.herokuapp.com/usertasks/${id}`, change, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -76,7 +76,7 @@ export const SortDataAPI = async (
   try {
     await axios
       .get(
-        `https://sagar-rct-201.herokuapp.com/usertasks?page=${currentPage}&limit=${pageLimit}&type=${key}&sort=${change}`,
+        `https://bitrix-clone.herokuapp.com/usertasks?page=${currentPage}&limit=${pageLimit}&type=${key}&sort=${change}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

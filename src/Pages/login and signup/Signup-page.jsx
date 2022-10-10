@@ -2,11 +2,24 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../Context/AuthContext";
 import { Navigate } from "react-router-dom";
-import { Box, Button, Heading, Input, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Text,
+  Spinner,
+} from "@chakra-ui/react";
+
+// https://bitrix-clone.herokuapp.com
+// https://bitrix-clone.herokuapp.com
 
 const SignupPage = () => {
   const { state, dispatch } = useContext(AuthContext);
-
+  const { signupLoading } = state;
+  console.log(signupLoading);
   const [tasks, setTasks] = useState({});
 
   const handleChange = (e) => {
@@ -15,72 +28,81 @@ const SignupPage = () => {
   };
   const handleClick = (e) => {
     e.preventDefault();
-    console.log(tasks);
     registerUser();
   };
 
   const registerUser = async () => {
+    dispatch({ type: "signupRequest" });
     try {
       await axios
-        .post("https://sagar-rct-201.herokuapp.com/auth/register", tasks)
+        .post("https://bitrix-clone.herokuapp.com/auth/register", tasks)
         .then((data) => {
           dispatch({ type: "signupSuccess", payload: data.data });
         });
     } catch (err) {
-      alert(err);
+      console.log(err.response.data.msg);
+      dispatch({ type: "signupFail" });
+      alert(err.response.data.msg);
     }
   };
 
-  if (state.isSignuped) {
+  if (state.isSignedUp) {
     return <Navigate to="/login" />;
   }
   return (
-    <Box boxShadow="lg" w="30%" p="2%" m="auto" rounded="md">
-      <Box>
-        <Heading mt="20px" fontSize="xl">
-          Enter your Name
-        </Heading>
-        <Input
-          w="80%"
-          type="text"
-          placeholder="name"
-          name="name"
-          onChange={handleChange}
-          required
+    <>
+      {signupLoading ? (
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
         />
-        <Heading fontSize="xl" mt="20px">
-          Enter your email
-        </Heading>
-        <Input
-          w="80%"
-          type="text"
-          placeholder="email"
-          name="email"
-          onChange={handleChange}
-          required
-        />
-        <Heading mt="20px" fontSize="xl">
-          Enter your password
-        </Heading>
-        <Input
-          w="80%"
-          type="text"
-          placeholder="password"
-          name="password"
-          onChange={handleChange}
-          required
-        />
-        <Button
-          size="lg"
-          bgColor="blue"
-          mt="20px"
-          color="white"
-          onClick={(e) => handleClick(e)}
-        >
-          Sign Up
-        </Button>
-      </Box>
-    </Box>
+      ) : (
+        <Box boxShadow="lg" w="30%" p="2%" m="auto" rounded="md">
+          <Box>
+            <FormControl>
+              <FormLabel>Name</FormLabel>
+              <Input
+                w="100%"
+                type="text"
+                placeholder="name"
+                name="name"
+                onChange={handleChange}
+                required
+              />
+              <FormLabel>Email address</FormLabel>
+              <Input
+                w="100%"
+                type="text"
+                placeholder="email"
+                name="email"
+                onChange={handleChange}
+                required
+              />
+              <FormLabel>Password</FormLabel>
+              <Input
+                w="100%"
+                type="text"
+                placeholder="password"
+                name="password"
+                onChange={handleChange}
+                required
+              />
+              <Input
+                size="lg"
+                bgColor="blue"
+                mt="20px"
+                color="white"
+                type="submit"
+                onClick={handleClick}
+              />
+            </FormControl>
+          </Box>
+        </Box>
+      )}
+    </>
   );
 };
 
