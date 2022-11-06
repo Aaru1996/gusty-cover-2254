@@ -21,26 +21,30 @@ export const Crm = () => {
     }
   };
   useEffect(() => {
-    axios.get("http://localhost:8000/tasks").then((r) => {
+    axios.get("https://blooming-badlands-21297.herokuapp.com/tasks").then((r) => {
       setTasks(r.data);
     });
   }, [tasks.task]);
 
   useEffect(() => {
     for (let i = 0; i < tasks.length; i++) {
-      if (tasks[i].id === index) {
+      if (tasks[i]._id === index) {
         // console.log('manish',tasks[i])
-        axios.get(`http://localhost:8000/tasks/${tasks[i].id}`).then((res) => {
-          let payload = res.data;
-          payload["task"].push(obj);
-          axios
-            .put(`http://localhost:8000/tasks/${tasks[i].id}`, payload)
-            .then((res) => {
-              // console.log(res.data)
-              setOpenform(!openform);
-            });
-        });
-        // axios.post(`https://bitrix-clone.herokuapp.com/tasks/${tasks[i].id}`,obj)
+        axios
+          .put(
+            `https://blooming-badlands-21297.herokuapp.com/tasks/${tasks[i]._id}/edit`,
+            obj
+          )
+          .then((res) => {
+            axios
+              .get(
+                `https://blooming-badlands-21297.herokuapp.com/tasks`
+              )
+              .then((res) => {
+                // console.log(res.data)
+                setOpenform(!openform);
+              });
+          });
         console.log("obj", obj);
       }
     }
